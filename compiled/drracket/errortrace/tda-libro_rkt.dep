@@ -1,1 +1,0 @@
-("8.18" ta6nt ("f5a686235c987a284241c9db36646c0d2d9fdb2d" . "fc8fbb0ece77ec2adbbcf47a80a65cf3d46ae4ec") #"C:\\Users\\cam24\\OneDrive\\Escritorio\\drracket paradigm\\util.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
