@@ -1,0 +1,49 @@
+#lang racket
+(provide
+  crear-biblioteca
+  biblioteca-libros biblioteca-usuarios biblioteca-prestamos
+  biblioteca-max-libros-usuario biblioteca-dias-max-prestamo
+  biblioteca-tasa-multa-diaria biblioteca-limite-deuda-max
+  biblioteca-dias-max-retraso biblioteca-fecha-actual)
+
+;; Representación elegida (siguiendo la cabecera del RF5):
+;; (list libros usuarios prestamos
+;;       max-libros-usuario dias-max-prestamo tasa-multa-diaria
+;;       limite-deuda-max dias-max-retraso fecha-actual)
+;;
+;; - libros:     lista de Libro
+;; - usuarios:   lista de Usuario
+;; - prestamos:  lista de Prestamo
+;; - max-libros-usuario: int
+;; - dias-max-prestamo:  int
+;; - tasa-multa-diaria:  int
+;; - limite-deuda-max:   int
+;; - dias-max-retraso:   int
+;; - fecha-actual:       string "DD/MM"
+
+;; RF05: crear-biblioteca
+(define (crear-biblioteca libros usuarios prestamos
+                          max-libros-usuario
+                          dias-max-prestamo
+                          tasa-multa-diaria
+                          limite-deuda-max
+                          dias-max-retraso
+                          fecha-inicial)
+  (list libros usuarios prestamos
+        max-libros-usuario
+        dias-max-prestamo
+        tasa-multa-diaria
+        limite-deuda-max
+        dias-max-retraso
+        fecha-inicial))
+
+;; Selectores
+(define (biblioteca-libros biblio)               (list-ref biblio 0))
+(define (biblioteca-usuarios biblio)             (list-ref biblio 1))
+(define (biblioteca-prestamos biblio)            (list-ref biblio 2))
+(define (biblioteca-max-libros-usuario biblio)   (list-ref biblio 3))
+(define (biblioteca-dias-max-prestamo biblio)    (list-ref biblio 4))
+(define (biblioteca-tasa-multa-diaria biblio)    (list-ref biblio 5))
+(define (biblioteca-limite-deuda-max biblio)     (list-ref biblio 6))
+(define (biblioteca-dias-max-retraso biblio)     (list-ref biblio 7))
+(define (biblioteca-fecha-actual biblio)         (list-ref biblio 8))

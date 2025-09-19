@@ -10,14 +10,6 @@
 (provide (all-defined-out))
 
 (require "tda-usuario.rkt")
-(require "tda-libro.rkt")
-(require "tda-prestamo.rkt")
-(require "tda-biblioteca.rkt")
-(provide (all-from-out "tda-usuario.rkt")
-         (all-from-out "tda-libro.rkt")
-         (all-from-out "tda-prestamo.rkt")
-         (all-from-out "tda-biblioteca.rkt"))
-
-
-
+(require "tda-libro.rkt")      ;; futuro
+(require "tda-prestamo.rkt")   ;; futuro
 (require "tda-sistema.rkt")    ;; futuro

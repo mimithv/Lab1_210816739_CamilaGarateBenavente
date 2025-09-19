@@ -1,26 +1,55 @@
 #lang racket
-;; tda-libro.rkt
-;; -----------------------------------------------------------------------------
-;; Libro: id único, título, autor, disponibilidad.
-;; Reglas: título/autor en minúsculas al crear.
-;; -----------------------------------------------------------------------------
-(require "util.rkt")
-(provide make-libro libro? libro-id libro-titulo libro-autor libro-disponible?
-         libro-marcar-disponible libro-marcar-no-disponible)
 
-;; Representación: (list 'libro id titulo autor disponible?)
-(define (make-libro id titulo autor)
-  (list 'libro (ensure-nat+ id 'id) (str-low titulo) (str-low autor) #t))
+(provide crear-libro
+         libro-id libro-titulo libro-autor libro-estado
+         libro-actualizar-estado get-libro-id)
+;; ===========================
+;; TDA Libro
+;; ===========================
 
-(define (libro? x) (and (pair? x) (eq? (car x) 'libro)))
-(define (libro-id L)         (cadr L))
-(define (libro-titulo L)     (caddr L))
-(define (libro-autor L)      (cadddr L))
-(define (libro-disponible? L) (list-ref L 4))
+;; Representación: (list ID titulo autor estado)
+;; - ID: string o número
+;; - titulo: string
+;; - autor: string
+;; - estado: "disponible" o "no disponible"
 
-;; Modificadores puros
-(define (libro-marcar-disponible L)
-  (list 'libro (libro-id L) (libro-titulo L) (libro-autor L) #t))
+;; ==========================================
+;; RF03 - crear-libro
+;; ==========================================
+;; Dom -> Rec: (int x string x string) -> Libro
+;; Cabecera: (crear-libro id titulo autor)
 
-(define (libro-marcar-no-disponible L)
-  (list 'libro (libro-id L) (libro-titulo L) (libro-autor L) #f))
+(define (crear-libro id titulo autor)
+  (list id
+        (string-downcase titulo)
+        (string-downcase autor)
+        "disponible"))
+
+;; ==========================================
+;; Selectores
+;; ==========================================
+
+(define (libro-id libro) (list-ref libro 0))
+(define (libro-titulo libro) (list-ref libro 1))
+(define (libro-autor libro) (list-ref libro 2))
+(define (libro-estado libro) (list-ref libro 3))
+
+;; ==========================================
+;; Modificadores
+;; ==========================================
+
+(define (libro-actualizar-estado libro nuevoEstado)
+  (list (libro-id libro)
+        (libro-titulo libro)
+        (libro-autor libro)
+        nuevoEstado))
+
+;; ===========================
+;; RF10 - get-libro-id
+;; ===========================
+;; Dom -> Rec: Libro -> int
+;; Nota: si por error llega '() (p. ej. no se encontró en RF09),
+;; devolvemos '() para evitar crash. Si llega un Libro válido, retorna su ID.
+(define (get-libro-id libro)
+  (if (null? libro) '() (libro-id libro)))
+

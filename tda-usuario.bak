@@ -1,0 +1,67 @@
+#lang racket
+
+;; ==========================================
+;; TDA Usuario
+;; ==========================================
+;; Representación: (list ID nombre deuda estado librosPrestados)
+;; - ID: número o string único
+;; - nombre: string
+;; - deuda: número (inicia en 0)
+;; - estado: string ("activo" o "suspendido")
+;; - librosPrestados: lista de IDs de libros
+
+;; ==========================================
+;; RF02 - crear-usuario
+;; ==========================================
+;; Crea un usuario con deuda inicial 0, estado "activo" y sin libros prestados.
+;; Dom -> Rec: (int x string) -> Usuario
+;; Cabecera: (crear-usuario id nombre)
+
+(define (crear-usuario id nombre)
+  (list id nombre 0 "activo" '()))
+
+;; ==========================================
+;; Selectores
+;; ==========================================
+
+(define (usuario-id usuario) (list-ref usuario 0))
+(define (usuario-nombre usuario) (list-ref usuario 1))
+(define (usuario-deuda usuario) (list-ref usuario 2))
+(define (usuario-estado usuario) (list-ref usuario 3))
+(define (usuario-libros usuario) (list-ref usuario 4))
+
+;; ==========================================
+;; Modificadores
+;; ==========================================
+
+;; Actualiza la deuda del usuario
+(define (usuario-actualizar-deuda usuario nuevaDeuda)
+  (list (usuario-id usuario)
+        (usuario-nombre usuario)
+        nuevaDeuda
+        (usuario-estado usuario)
+        (usuario-libros usuario)))
+
+;; Cambia el estado del usuario (ej. "activo" o "suspendido")
+(define (usuario-actualizar-estado usuario nuevoEstado)
+  (list (usuario-id usuario)
+        (usuario-nombre usuario)
+        (usuario-deuda usuario)
+        nuevoEstado
+        (usuario-libros usuario)))
+
+;; Agregar un libro prestado al usuario
+(define (usuario-agregar-libro usuario libroID)
+  (list (usuario-id usuario)
+        (usuario-nombre usuario)
+        (usuario-deuda usuario)
+        (usuario-estado usuario)
+        (cons libroID (usuario-libros usuario))))
+
+;; Remover un libro prestado al usuario
+(define (usuario-remover-libro usuario libroID)
+  (list (usuario-id usuario)
+        (usuario-nombre usuario)
+        (usuario-deuda usuario)
+        (usuario-estado usuario)
+        (remove libroID (usuario-libros usuario))))

@@ -1,0 +1,26 @@
+#lang racket
+;; ===========================
+;; TDA Libro
+;; ===========================
+
+;; Representación: (list ID titulo autor estado)
+;; - ID: string o número
+;; - titulo: string
+;; - autor: string
+;; - estado: "disponible" o "no disponible"
+
+(define (crear-libro id titulo autor)
+  (list id titulo autor "disponible"))
+
+;; Selectores
+(define (libro-id libro) (list-ref libro 0))
+(define (libro-titulo libro) (list-ref libro 1))
+(define (libro-autor libro) (list-ref libro 2))
+(define (libro-estado libro) (list-ref libro 3))
+
+;; Modificadores
+(define (libro-actualizar-estado libro nuevoEstado)
+  (list (libro-id libro)
+        (libro-titulo libro)
+        (libro-autor libro)
+        nuevoEstado))

@@ -1,33 +1,33 @@
 #lang racket
-;; tda-prestamo.rkt
-;; -----------------------------------------------------------------------------
-;; Préstamo: id, id-usuario, id-libro, fecha-prestamo "DD/MM", dias-solicitados, estado.
-;; RF15/RF16/RF17 operarán sobre estos campos.
-;; -----------------------------------------------------------------------------
-(require "util.rkt" "tda-fecha.rkt")
-(provide make-prestamo prestamo? prestamo-id prestamo-uid prestamo-lid
-         prestamo-fecha prestamo-dias prestamo-estado
-         prestamo-con-estado)
 
-;; estado: 'activo o 'completado (o 'devuelto)
-(define (make-prestamo id uid lid fecha dias)
-  (list 'prestamo (ensure-nat+ id 'id)
-        (ensure-nat+ uid 'id-usuario)
-        (ensure-nat+ lid 'id-libro)
-        (make-fecha fecha)
-        (ensure-nat+ dias 'dias-solicitados)
-        'activo))
+(provide crear-prestamo
+         prestamo-id prestamo-usuario prestamo-libro
+         prestamo-fecha prestamo-dias)
 
-(define (prestamo? p) (and (pair? p) (eq? (car p) 'prestamo)))
-(define (prestamo-id p)     (cadr p))
-(define (prestamo-uid p)    (caddr p))
-(define (prestamo-lid p)    (cadddr p))
-(define (prestamo-fecha p)  (list-ref p 4))
-(define (prestamo-dias p)   (list-ref p 5))
-(define (prestamo-estado p) (list-ref p 6))
+;; ==========================================
+;; TDA Prestamo
+;; ==========================================
+;; Representación: (list id idUsuario idLibro fechaPrestamo diasSolicitados)
+;; - id: número único
+;; - idUsuario: referencia al usuario
+;; - idLibro: referencia al libro
+;; - fechaPrestamo: string "DD/MM"
+;; - diasSolicitados: número entero (máx definido por sistema)
 
-(define (prestamo-con-estado p nuevo-estado)
-  (if (member nuevo-estado '(activo completado devuelto))
-      (list 'prestamo (prestamo-id p) (prestamo-uid p) (prestamo-lid p)
-            (prestamo-fecha p) (prestamo-dias p) nuevo-estado)
-      (error 'prestamo-con-estado "Estado inválido")))
+;; ==========================================
+;; RF04 - crear-prestamo
+;; ==========================================
+;; Dom -> Rec: (int x int x int x string x int) -> Prestamo
+
+(define (crear-prestamo id idUsuario idLibro fechaPrestamo diasSolicitados)
+  (list id idUsuario idLibro fechaPrestamo diasSolicitados))
+
+;; ==========================================
+;; Selectores
+;; ==========================================
+
+(define (prestamo-id prestamo) (list-ref prestamo 0))
+(define (prestamo-usuario prestamo) (list-ref prestamo 1))
+(define (prestamo-libro prestamo) (list-ref prestamo 2))
+(define (prestamo-fecha prestamo) (list-ref prestamo 3))
+(define (prestamo-dias prestamo) (list-ref prestamo 4))

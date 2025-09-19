@@ -1,0 +1,50 @@
+#lang racket
+
+(require "tda-usuario.rkt")
+
+(display "===== BIBLIOTECA VIRTUAL - Script de Pruebas =====\n\n")
+(display "Script actualizado al 19/09/2025 - 23 hrs\n\n")
+
+;; ==========================================
+;; Configuración inicial
+;; ==========================================
+
+(display ">> Creando usuarios (RF02)\n")
+
+(define u1 (crear-usuario 1 "Jose"))
+(define u2 (crear-usuario 2 "Carlos"))
+
+(display "Usuario 1: ") (displayln u1)  ;; esperado: '(1 "Jose" 0 "activo" ())
+(display "Usuario 2: ") (displayln u2)  ;; esperado: '(2 "Carlos" 0 "activo" ())
+
+
+;; ==========================================
+;; Pruebas de Selectores
+;; ==========================================
+
+(display "\n>> Probando selectores de Usuario\n")
+
+(display "ID de u1: ") (displayln (usuario-id u1))          ;; esperado: 1
+(display "Nombre de u1: ") (displayln (usuario-nombre u1))  ;; esperado: "Jose"
+(display "Deuda de u1: ") (displayln (usuario-deuda u1))    ;; esperado: 0
+(display "Estado de u1: ") (displayln (usuario-estado u1))  ;; esperado: "activo"
+(display "Libros de u1: ") (displayln (usuario-libros u1))  ;; esperado: '()
+
+
+;; ==========================================
+;; Pruebas de Modificadores
+;; ==========================================
+
+(display "\n>> Probando modificadores de Usuario\n")
+
+(define u1-deuda (usuario-actualizar-deuda u1 300))
+(display "u1 con deuda actualizada: ") (displayln u1-deuda)
+
+(define u1-susp (usuario-actualizar-estado u1 "suspendido"))
+(display "u1 suspendido: ") (displayln u1-susp)
+
+(define u1-libro (usuario-agregar-libro u1 101))
+(display "u1 con libro agregado: ") (displayln u1-libro)
+
+(define u1-libro2 (usuario-remover-libro u1-libro 101))
+(display "u1 después de devolver libro: ") (displayln u1-libro2)

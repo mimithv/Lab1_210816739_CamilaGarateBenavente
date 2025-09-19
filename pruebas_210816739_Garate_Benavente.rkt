@@ -1,136 +1,166 @@
 #lang racket
 
-;; pruebas_210816739_Garate_Benavente.rkt
-;; -------------------------------------------------------------------
-;; Script de pruebas para RF01 (TDAs) - Biblioteca Virtual
-;; Autor: 210816739 - Garate Benavente
-;; Paradigma: Funcional (sin mutación), sin bibliotecas externas.
-;; Cómo usar:
-;;   1) Coloca este archivo en la MISMA carpeta que main.rkt y los TDAs.
-;;   2) Abre este archivo en DrRacket y presiona "Run" (▶).
-;;   3) Revisa la consola: todas las líneas con [OK] deberían pasar.
-;;   4) Si ves [FAIL], lee el mensaje para identificar qué no coincide.
-;;
-;; Nota: Los profesores revisan con un script similar; este archivo
-;; está estructurado para que puedan observar creación/uso básico
-;; de cada TDA exigido en RF01.
-;; -------------------------------------------------------------------
-
 (require "main.rkt")
 
-;; Utilidad local de pruebas (sin librerías externas)
-;; check-equal : string any any -> void
-;; Muestra [OK] si (equal? got expected), o [FAIL] con detalles.
-(define (check-equal label got expected)
-  (if (equal? got expected)
-      (displayln (format "~a: [OK]" label))
-      (displayln (format "~a: [FAIL] got=~a expected=~a" label got expected))))
+(display "===== BIBLIOTECA VIRTUAL - Script de Pruebas =====\n\n")
 
-;; =============================
-;; 1) TDA Fecha
-;; =============================
-(displayln "=== TDA Fecha ===")
-(define f1 (make-fecha "01/01"))
-(define f2 (make-fecha "30/01"))
-(define f3 (fecha+ "30/01" 1)) ; rollover a "01/02"
+;; ===========================
+;; RF02 - Crear usuarios
+;; ===========================
+(display ">> RF02: crear-usuario\n")
+(define u01 (crear-usuario 1 "Jose"))
+(define u02 (crear-usuario 2 "Carlos"))
+(display "u01: ") (displayln u01)
+(display "u02: ") (displayln u02)
 
-(check-equal "make-fecha formatea 01/01" f1 "01/01")
-(check-equal "dias-entre 01/01->30/01" (dias-entre f1 f2) 29)
-(check-equal "fecha+ 30/01 + 1 = 01/02" f3 "01/02")
-(check-equal "fecha<=? 01/01 <= 30/01" (fecha<=? f1 f2) #t)
-(check-equal "fecha<? 30/01 <? 01/01 (giro no es menor)" (fecha<? f2 f1) #f)
+;; ===========================
+;; RF03 - Crear libros
+;; ===========================
+(display "\n>> RF03: crear-libro\n")
+(define l101 (crear-libro 101 "El Hobbit" "J.R.R. Tolkien"))
+(define l102 (crear-libro 102 "1984" "George Orwell"))
+(display "l101: ") (displayln l101)
+(display "l102: ") (displayln l102)
 
-(newline)
+;; ===========================
+;; RF04 - Crear préstamos
+;; ===========================
+(display "\n>> RF04: crear-prestamo\n")
+(define p1001 (crear-prestamo 1001 (usuario-id u01) (libro-id l101) "01/01" 3))
+(display "p1001: ") (displayln p1001)
+(display "p1001 usuario-id: ") (displayln (prestamo-usuario p1001))
+(display "p1001 libro-id:   ") (displayln (prestamo-libro p1001))
+(display "p1001 fecha:      ") (displayln (prestamo-fecha p1001))
+(display "p1001 dias:       ") (displayln (prestamo-dias p1001))
 
-;; =============================
-;; 2) TDA Config
-;; =============================
-(displayln "=== TDA Config ===")
-(define cfg (make-config 2 3 100 1000 1 "01/01"))
+;; ===========================
+;; RF05 - crear-biblioteca
+;; ===========================
+(display "\n>> RF05: crear-biblioteca\n")
+(define b1
+  (crear-biblioteca
+    '() '() '()   ; libros, usuarios, prestamos
+    2             ; max-libros-usuario
+    3             ; dias-max-prestamo
+    100           ; tasa-multa-diaria
+    1000          ; limite-deuda-max
+    1             ; dias-max-retraso
+    "01/01"))     ; fecha-inicial
+(display "b1: ") (displayln b1)
 
-(check-equal "cfg-max-libros" (cfg-max-libros cfg) 2)
-(check-equal "cfg-dias-max"   (cfg-dias-max cfg)   3)
-(check-equal "cfg-tasa-multa" (cfg-tasa-multa cfg) 100)
-(check-equal "cfg-limite-deuda" (cfg-limite-deuda cfg) 1000)
-(check-equal "cfg-max-retraso"  (cfg-max-retraso cfg) 1)
-(check-equal "cfg-fecha-inicial" (cfg-fecha-inicial cfg) "01/01")
+;; ===========================
+;; RF06 - agregar-libro
+;; ===========================
+(display "\n>> RF06: agregar-libro\n")
+(define b2 (agregar-libro b1 l101))
+(define b3 (agregar-libro b2 l102))
+(display "libros b1: ") (displayln (biblioteca-libros b1)) ; => '()
+(display "libros b2: ") (displayln (biblioteca-libros b2)) ; => (l101)
+(display "libros b3: ") (displayln (biblioteca-libros b3)) ; => (l102 l101)
 
-(newline)
+;; Intento duplicado: NO debe cambiar
+(define l101-dup (crear-libro 101 "EL HOBBIT" "J.R.R. TOLKIEN"))
+(define b3-dup (agregar-libro b3 l101-dup))
+(display "duplicado ID=101 → b3 == b3-dup: ")
+(displayln (equal? (biblioteca-libros b3) (biblioteca-libros b3-dup))) ; => #t
 
-;; =============================
-;; 3) TDA Libro
-;; =============================
-(displayln "=== TDA Libro ===")
-(define libro1 (make-libro 101 "El Hobbit" "J.R.R. Tolkien"))
+;; ===========================
+;; RF07 - registrar-usuario
+;; ===========================
+(display "\n>> RF07: registrar-usuario (al final de la lista)\n")
+(define b4 (registrar-usuario b3 u01))
+(define b5 (registrar-usuario b4 u02))
+(display "usuarios b3: ") (displayln (biblioteca-usuarios b3)) ; => '()
+(display "usuarios b4: ") (displayln (biblioteca-usuarios b4)) ; => (u01)
+(display "usuarios b5: ") (displayln (biblioteca-usuarios b5)) ; => (u01 u02)
 
-(check-equal "libro-id" (libro-id libro1) 101)
-(check-equal "libro-titulo normalizado" (libro-titulo libro1) "el hobbit")
-(check-equal "libro-autor normalizado"  (libro-autor libro1)  "j.r.r. tolkien")
-(check-equal "libro-disponible? inicial" (libro-disponible? libro1) #t)
-(check-equal "marcar-no-disponible" (libro-disponible? (libro-marcar-no-disponible libro1)) #f)
-(check-equal "marcar-disponible"    (libro-disponible? (libro-marcar-disponible (libro-marcar-no-disponible libro1))) #t)
+;; Duplicado: NO debe cambiar
+(define b5-dup (registrar-usuario b5 u01))
+(display "duplicado u01 → b5 == b5-dup: ")
+(displayln (equal? (biblioteca-usuarios b5) (biblioteca-usuarios b5-dup))) ; => #t
 
-(newline)
+;; ===========================
+;; RF08 - obtener-usuario
+;; ===========================
+(display "\n>> RF08: obtener-usuario\n")
 
-;; =============================
-;; 4) TDA Usuario
-;; =============================
-(displayln "=== TDA Usuario ===")
-(define user1 (make-usuario 1 "Jose"))
+(display "Buscar ID=1 en b5: ")
+(define u-encontrado (obtener-usuario b5 1))
+(displayln u-encontrado)           ; => usuario con ID=1
 
-(check-equal "usuario-id" (usuario-id user1) 1)
-(check-equal "usuario-nombre" (usuario-nombre user1) "Jose")
-(check-equal "usuario-deuda inicial 0" (usuario-deuda user1) 0)
-(check-equal "usuario-suspendido? inicial #f" (usuario-suspendido? user1) #f)
+(display "Buscar ID=99 en b5 (no existe): ")
+(displayln (obtener-usuario b5 99)) ; => '()
 
-(define user1-con-deuda (usuario-con-deuda user1 200))
-(check-equal "usuario-con-deuda 200" (usuario-deuda user1-con-deuda) 200)
+;; ===========================
+;; RF09 - buscar-libro
+;; ===========================
+(display "\n>> RF09: buscar-libro\n")
 
-(define user1-susp (usuario-con-estado user1-con-deuda #t))
-(check-equal "usuario-con-estado #t" (usuario-suspendido? user1-susp) #t)
+(display "Buscar por id=101: ")
+(displayln (buscar-libro b3 "id" 101))          ; => l101
 
-(define user1-pre (usuario-agregar-prestamo user1-susp 1001))
-(check-equal "usuario-agregar-prestamo agrega id" (member 1001 (usuario-prestamos user1-pre)) '(1001))
+(display "Buscar por titulo contiene 'hob': ")
+(displayln (buscar-libro b3 "titulo" "hob"))    ; => l101
 
-(define user1-pre-removed (usuario-remover-prestamo user1-pre 1001))
-(check-equal "usuario-remover-prestamo quita id" (member 1001 (usuario-prestamos user1-pre-removed)) #f)
+(display "Buscar por autor contiene 'orwell': ")
+(displayln (buscar-libro b3 "autor" "OrWeLl"))  ; => l102 (case-insensitive)
 
-(newline)
+(display "Buscar inexistente (id=999): ")
+(displayln (buscar-libro b3 "id" 999))          ; => '()
 
-;; =============================
-;; 5) TDA Prestamo
-;; =============================
-(displayln "=== TDA Prestamo ===")
-(define p1 (make-prestamo 1001 1 101 "01/01" 3))
+(display "Buscar por autor 'tolk' retorna primero si hay varios: ")
+;; si tuvieras más de un libro con 'tolk', devolverá el primero
+(displayln (buscar-libro b3 "autor" "tolk"))
 
-(check-equal "prestamo-id" (prestamo-id p1) 1001)
-(check-equal "prestamo-uid" (prestamo-uid p1) 1)
-(check-equal "prestamo-lid" (prestamo-lid p1) 101)
-(check-equal "prestamo-fecha" (prestamo-fecha p1) "01/01")
-(check-equal "prestamo-dias" (prestamo-dias p1) 3)
-(check-equal "prestamo-estado inicial" (prestamo-estado p1) 'activo)
-(check-equal "prestamo-con-estado devuelto" (prestamo-estado (prestamo-con-estado p1 'devuelto)) 'devuelto)
+;; ===========================
+;; RF10 - get-libro-id
+;; ===========================
+(display "\n>> RF10: get-libro-id\n")
 
-(newline)
+(display "ID desde buscar por autor 'tolkien': ")
+(define libro-tolk (buscar-libro b3 "autor" "tolkien"))
+(displayln (get-libro-id libro-tolk))  ; => 101 (según tus datos)
 
-;; =============================
-;; 6) TDA Biblioteca
-;; =============================
-(displayln "=== TDA Biblioteca ===")
-(define bib1 (make-biblioteca "01/01" cfg (list libro1) (list user1) (list p1)))
+(display "ID cuando no existe (busqueda id=999): ")
+(displayln (get-libro-id (buscar-libro b3 "id" 999))) ; => '() con versión segura
 
-(check-equal "bib-fecha" (bib-fecha bib1) "01/01")
-(check-equal "bib-config -> dias-max" (cfg-dias-max (bib-config bib1)) 3)
-(check-equal "bib-libros cantidad" (length (bib-libros bib1)) 1)
-(check-equal "bib-usuarios cantidad" (length (bib-usuarios bib1)) 1)
-(check-equal "bib-prestamos cantidad" (length (bib-prestamos bib1)) 1)
+;; ===========================
+;; RF11 - get-fecha
+;; ===========================
+(display "\n>> RF11: get-fecha\n")
 
-;; Modificador puro de fecha
-(define bib2 (bib-con-fecha bib1 "02/01"))
-(check-equal "bib-con-fecha cambia solo fecha" (and (equal? (bib-fecha bib2) "02/01")
-                                                    (equal? (length (bib-libros bib2)) 1)
-                                                    (equal? (length (bib-usuarios bib2)) 1)
-                                                    (equal? (length (bib-prestamos bib2)) 1))
-             #t)
+(display "Fecha actual de b1: ")
+(displayln (get-fecha b1)) ; debería mostrar "01/01"
 
-(displayln "=== FIN RF01 ===")
+;; ===========================
+;; RF12 - libro-disponible?
+;; ===========================
+(display "\n>> RF12: libro-disponible?\n")
+
+(display "¿Libro 101 disponible en b3? ")
+(displayln (libro-disponible? b3 101)) ; => #t (si está como "disponible")
+
+(display "¿Libro 999 disponible en b3? (no existe) ")
+(displayln (libro-disponible? b3 999)) ; => #f
+
+;; ===========================
+;; RF14 - obtener-deuda
+;; ===========================
+(display "\n>> RF14: obtener-deuda\n")
+
+;; Caso 1: usuario sin deuda
+(define u14-a (crear-usuario 1401 "Luisa"))
+(display "Deuda de u14-a (esperado 0): ")
+(displayln (obtener-deuda u14-a))           ; => 0
+
+;; Caso 2: usuario con deuda actualizada
+(define u14-b (crear-usuario 1402 "Marco"))
+(define u14-b$ (usuario-actualizar-deuda u14-b 200))
+(display "Deuda de u14-b$ (esperado 200): ")
+(displayln (obtener-deuda u14-b$))          ; => 200
+
+;; (opcional) “aserciones” simples
+(display "¿Deuda u14-a es 0? ") (displayln (= (obtener-deuda u14-a) 0))
+(display "¿Deuda u14-b$ es 200? ") (displayln (= (obtener-deuda u14-b$) 200))
+
+

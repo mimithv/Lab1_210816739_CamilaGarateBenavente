@@ -1,0 +1,19 @@
+#lang racket
+;; ===========================
+;; TDA Prestamo
+;; ===========================
+
+;; Representación: (list idUsuario idLibro fechaInicio fechaFin)
+;; - idUsuario: referencia al usuario
+;; - idLibro: referencia al libro
+;; - fechaInicio: número o string (día)
+;; - fechaFin: número o string (día)
+
+(define (crear-prestamo idUsuario idLibro fechaInicio fechaFin)
+  (list idUsuario idLibro fechaInicio fechaFin))
+
+;; Selectores
+(define (prestamo-usuario prestamo) (list-ref prestamo 0))
+(define (prestamo-libro prestamo) (list-ref prestamo 1))
+(define (prestamo-fecha-inicio prestamo) (list-ref prestamo 2))
+(define (prestamo-fecha-fin prestamo) (list-ref prestamo 3))
