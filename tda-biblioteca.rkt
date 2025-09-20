@@ -9,6 +9,7 @@
 
 (require "tda-libro.rkt"
          "tda-usuario.rkt"
+         "tda-prestamo.rkt"
          racket/string)
 
 ;; Representación elegida (siguiendo la cabecera del RF5):
@@ -173,3 +174,4 @@
   (define lb (buscar-libro biblio "id" id-libro))  ; usa RF09
   (and (pair? lb)                                   ; existe (no es '())
        (string-ci=? (libro-estado lb) "disponible")))
+

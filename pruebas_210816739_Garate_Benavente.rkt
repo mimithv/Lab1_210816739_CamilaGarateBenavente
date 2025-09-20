@@ -163,4 +163,48 @@
 (display "¿Deuda u14-a es 0? ") (displayln (= (obtener-deuda u14-a) 0))
 (display "¿Deuda u14-b$ es 200? ") (displayln (= (obtener-deuda u14-b$) 200))
 
+;; ===========================
+;; RF15 - obtener-fecha-vencimiento
+;; ===========================
+(display "\n>> RF15: obtener-fecha-vencimiento\n")
+
+;; Caso 1: suma normal dentro del mismo mes
+(define p15-a (crear-prestamo 5001 1 101 "28/01" 5))
+(display "Vencimiento (28/01 + 5) => ")
+(displayln (obtener-fecha-vencimiento p15-a)) ; esperado "03/02"
+
+;; Caso 2: cruce de mes
+(define p15-b (crear-prestamo 5002 1 101 "29/01" 5))
+(display "Vencimiento (29/01 + 5) => ")
+(displayln (obtener-fecha-vencimiento p15-b)) ; esperado "04/02"
+
+;; Caso 3: cruce de diciembre a enero
+(define p15-c (crear-prestamo 5003 1 101 "30/12" 5))
+(display "Vencimiento (30/12 + 5) => ")
+(displayln (obtener-fecha-vencimiento p15-c)) ; esperado "05/01"
+
+;; Caso 4: sin días extra
+(define p15-d (crear-prestamo 5004 1 101 "15/07" 0))
+(display "Vencimiento (15/07 + 0) => ")
+(displayln (obtener-fecha-vencimiento p15-d)) ; esperado "15/07"
+
+;; ===========================
+;; RF16 - calcular-dias-retraso
+;; ===========================
+(display "\n>> RF16: calcular-dias-retraso\n")
+
+(display "Atraso entre 04/01 y 06/01 (esperado 2): ")
+(displayln (calcular-dias-retraso "04/01" "06/01"))
+
+(display "Atraso entre 30/01 y 01/02 (esperado 1): ")
+(displayln (calcular-dias-retraso "30/01" "01/02"))
+
+(display "Atraso entre 01/01 y 05/02 (esperado 35-1=34): ")
+(displayln (calcular-dias-retraso "01/01" "05/02"))
+
+(display "Atraso entre 10/03 y 10/03 (esperado 0): ")
+(displayln (calcular-dias-retraso "10/03" "10/03"))
+
+(display "Atraso entre 15/05 y 10/05 (esperado 0): ")
+(displayln (calcular-dias-retraso "15/05" "10/05"))
 

@@ -1,1 +1,1 @@
-("8.18" ta6nt ("bf793bd56ca9c8c628752624d1980988a2e17710" . "be5cc4791c360b32636c37850707d5aaf41979a3") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
+("8.18" ta6nt ("c8b4d8c70764a3554639007e524570e8b7d30a1d" . "cf92db0bfc9a94e3952e9d9a5e0df4da3fa3d58b") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"format.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"racket" #"string.rkt"))
